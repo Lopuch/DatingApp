@@ -22,7 +22,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
                     const serverError = error.error;
                     let modalStateErrors = '';
-                    // TADY SE TO LISI, on ma v error jeste jedno pole ERRORS a v nem za potom hodnoty, ja mam o uroven min
+                    // TADY SE TO LISI, on ma v error jeste jedno pole ERRORS a v nem za potomky hodnoty, ja mam o uroven min
                     // resi to v Udemy 5 - Handling errors in Angular
                     if(serverError && typeof serverError === 'object'){
                         for(const key in serverError){
