@@ -9,6 +9,27 @@ namespace DatingApp.API.Data
 
         public DbSet<Value> Values { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Photo> Photos{get;set;}
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<Like> Likes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            // Primarni klic je kombinace LikerId a LikeeId
+            builder.Entity<Like>()
+                .HasKey(x => new { x.LikerId, x.LikeeId });
+
+            // Tomuto zpusobu se rika Fluent API
+            builder.Entity<Like>()
+                .HasOne(x=>x.Likee) // Jednoho uzivatele muze likovat vic lidi
+                .WithMany(x=>x.Likers)
+                .HasForeignKey(x=>x.LikeeId)
+                .OnDelete(DeleteBehavior.Restrict); // Nebude to mazat rekurzivne
+
+                builder.Entity<Like>()
+                .HasOne(x=>x.Liker) // Jeden uzivatel muze likovat vic lidi
+                .WithMany(x=>x.Likees)
+                .HasForeignKey(x=>x.LikerId)
+                .OnDelete(DeleteBehavior.Restrict); // Nebude to mazat rekurzivne
+        }
     }
 }
