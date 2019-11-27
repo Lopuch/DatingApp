@@ -11,6 +11,7 @@ namespace DatingApp.API.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -20,16 +21,26 @@ namespace DatingApp.API.Data
 
             // Tomuto zpusobu se rika Fluent API
             builder.Entity<Like>()
-                .HasOne(x=>x.Likee) // Jednoho uzivatele muze likovat vic lidi
-                .WithMany(x=>x.Likers)
-                .HasForeignKey(x=>x.LikeeId)
+                .HasOne(x => x.Likee) // Jednoho uzivatele muze likovat vic lidi
+                .WithMany(x => x.Likers)
+                .HasForeignKey(x => x.LikeeId)
                 .OnDelete(DeleteBehavior.Restrict); // Nebude to mazat rekurzivne
 
-                builder.Entity<Like>()
-                .HasOne(x=>x.Liker) // Jeden uzivatel muze likovat vic lidi
-                .WithMany(x=>x.Likees)
-                .HasForeignKey(x=>x.LikerId)
+            builder.Entity<Like>()
+                .HasOne(x => x.Liker) // Jeden uzivatel muze likovat vic lidi
+                .WithMany(x => x.Likees)
+                .HasForeignKey(x => x.LikerId)
                 .OnDelete(DeleteBehavior.Restrict); // Nebude to mazat rekurzivne
+
+            builder.Entity<Message>()
+                .HasOne(x => x.Sender)
+                .WithMany(x => x.MessagesSent)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Message>()
+                .HasOne(x => x.Recipient)
+                .WithMany(x => x.MessagesReceived)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
